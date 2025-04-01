@@ -1,11 +1,11 @@
 use rand::Rng;
 use std::io::{self, Write};
 
-pub struct RandomNumberGenerator {}
+pub struct GenerateRandomNumber {}
 
-impl RandomNumberGenerator {
+impl GenerateRandomNumber {
     pub fn new() -> Self {
-        RandomNumberGenerator {}
+        GenerateRandomNumber {}
     }
 
     pub fn generate_random_number(&self) {
