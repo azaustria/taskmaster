@@ -139,12 +139,35 @@ impl FetchRedditSavedData {
     }
 
     pub fn save_to_file(items: &Vec<SavedItem>, filename: &str) -> Result<(), Box<dyn Error>> {
-        let permalinks: Vec<Option<String>> =
-            items.iter().map(|item| item.permalink.clone()).collect();
+        let full_permalinks: Vec<String> = items
+            .iter()
+            .filter_map(|item| {
+                item.permalink.as_ref().map(|permalink| {
+                    let clean_permalink = if permalink.starts_with('/') {
+                        &permalink[1..]
+                    } else {
+                        permalink
+                    };
 
-        let json = serde_json::to_string_pretty(&permalinks)?;
+                    let trimmed_permalink = clean_permalink
+                        .trim_start_matches("(")
+                        .trim_end_matches(")");
+
+                    format!("https://old.reddit.com/{}", trimmed_permalink)
+                })
+            })
+            .collect();
+
+        let text_content = full_permalinks.join("\n");
+
         let mut file = File::create(filename)?;
-        file.write_all(json.as_bytes())?;
+        file.write_all(text_content.as_bytes())?;
+
+        println!(
+            "Saved {} permalink URLs to {}",
+            full_permalinks.len(),
+            filename
+        );
 
         Ok(())
     }
