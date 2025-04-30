@@ -1,5 +1,7 @@
+mod convert_image;
 mod generate_random_number;
 
+use convert_image::ConvertImage;
 use generate_random_number::GenerateRandomNumber;
 use std::io::{self, Write};
 
@@ -9,6 +11,7 @@ fn main() {
     loop {
         println!("\nAvailable Tasks");
         println!("1. Generate random number");
+        println!("2. Convert images from directory");
 
         print!("\nPlease select a task: ");
         io::stdout().flush().unwrap();
@@ -22,6 +25,10 @@ fn main() {
             "1" => {
                 let generator = GenerateRandomNumber::new();
                 generator.generate_random_number();
+            }
+            "2" => {
+                let image_converter = ConvertImage::new();
+                image_converter.run();
             }
             _ => {
                 println!("Invalid selection. Please try again.");
