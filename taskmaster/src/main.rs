@@ -1,17 +1,22 @@
 mod convert_image;
+mod extract_reddit_saved_data;
 mod generate_random_number;
 
 use convert_image::ConvertImage;
+use extract_reddit_saved_data::ExtractRedditSavedData;
 use generate_random_number::GenerateRandomNumber;
+use std::error::Error;
 use std::io::{self, Write};
 
-fn main() {
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn Error>> {
     println!("Taskmaster v1.0");
 
     loop {
         println!("\nAvailable Tasks");
         println!("1. Generate random number");
         println!("2. Convert images from directory");
+        println!("3. Extract Reddit saved data");
 
         print!("\nPlease select a task: ");
         io::stdout().flush().unwrap();
@@ -29,6 +34,13 @@ fn main() {
             "2" => {
                 let image_converter = ConvertImage::new();
                 image_converter.run();
+            }
+            "3" => {
+                let reddit_saved_data_extractor: ExtractRedditSavedData =
+                    ExtractRedditSavedData::from_env()?;
+                reddit_saved_data_extractor
+                    .extract("reddit_saved_items.json")
+                    .await?;
             }
             _ => {
                 println!("Invalid selection. Please try again.");
