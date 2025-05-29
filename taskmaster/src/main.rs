@@ -10,7 +10,7 @@ use std::io::{self, Write};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
-    println!("Taskmaster v1.0");
+    println!("Taskmaster 0.3.2");
 
     loop {
         println!("\nAvailable Tasks");
